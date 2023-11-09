@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lấy nội dung từ Steam Community</title>
+</head>
+<body>
+    <div id="result"></div>
+    <script>
+        // Lấy steamid từ tham số truyền vào (URL query parameter)
+        const urlParams = new URLSearchParams(window.location.search);
+        const steamid = urlParams.get('steamid');
+
+        if (steamid) {
+            const appid = 730;
+            const contextid = 2;
+            const url = `http://steamcommunity.com/inventory/${steamid}/${appid}/${contextid}`;
+
+            // Sử dụng Fetch API để lấy nội dung từ URL
+            fetch(url)
+                .then(response => response.text())
+                .then(result => {
+                    // Hiển thị kết quả trong một phần tử HTML
+                    document.getElementById('result').innerHTML = `Nội dung từ URL: ${result}`;
+                })
+                .catch(error => {
+                    console.error('Không thể lấy nội dung từ URL:', error);
+                });
+        } else {
+            document.getElementById('result').innerHTML = "Vui lòng cung cấp steamid trong tham số URL.";
+        }
+    </script>
+</body>
+</html>
