@@ -5,28 +5,32 @@
 </head>
 <body>
     <div id="result"></div>
+
     <script>
-        // Lấy steamid từ tham số truyền vào (URL query parameter)
+        // Lấy steamid, appid, và contextid từ tham số truyền vào (URL query parameters)
         const urlParams = new URLSearchParams(window.location.search);
         const steamid = urlParams.get('steamid');
+        const appid = urlParams.get('appid');
+        const contextid = urlParams.get('contextid');
 
-        if (steamid) {
-            const appid = 730;
-            const contextid = 2;
+        if (steamid && appid && contextid) {
             const url = `https://steamcommunity.com/inventory/${steamid}/${appid}/${contextid}`;
-
-            // Sử dụng Fetch API để lấy nội dung từ URL
-            fetch(url)
-                .then(response => response.text())
-                .then(result => {
-                    // Hiển thị kết quả trong một phần tử HTML
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var result = xhr.responseText;
                     document.getElementById('result').innerHTML = `Nội dung từ URL: ${result}`;
-                })
-                .catch(error => {
-                    console.error('Không thể lấy nội dung từ URL:', error);
-                });
+                } else if (xhr.status !== 200) {
+                    console.error('Không thể lấy nội dung từ URL:', xhr.status, xhr.statusText);
+                }
+            };
+            
+            xhr.send();
         } else {
-            document.getElementById('result').innerHTML = "Vui lòng cung cấp steamid trong tham số URL.";
+            document.getElementById('result').innerHTML = "Vui lòng cung cấp steamid, appid, và contextid trong tham số URL.";
         }
     </script>
 </body>
